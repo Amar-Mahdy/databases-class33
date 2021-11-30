@@ -10,13 +10,13 @@ import {
 const transaction = async () => {
     connection.connect();
   try {
-    await Promise.all[
-      execQuery(START_TRANSACTION, console.log("transaction started")),
-      execQuery(SEND_MONEY, console.log("money has been withdraw")),
-      execQuery(UPDATE_MONEY, console.log("money has been arrived")),
-      execQuery(MAKE_REPORT, console.log("transaction report has been made")),
-      execQuery(COMMIT_TRANSACTION, console.log("transaction done"))
-    ];
+
+    await execQuery(START_TRANSACTION, console.log("transaction started")),
+    await  execQuery(SEND_MONEY, console.log("money has been withdraw")),
+    await  execQuery(UPDATE_MONEY, console.log("money has been arrived")),
+    await execQuery(MAKE_REPORT, console.log("transaction report has been made")),
+    await execQuery(COMMIT_TRANSACTION, console.log("transaction done"))
+    
   } catch (error) {
     console.log(error);
   }

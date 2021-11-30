@@ -1,16 +1,44 @@
+import { connection } from "../ex2/helpers/connection.js";
 
-// 1- Give an example of a value that can be passed as name and code that would take advantage of SQL-injection and (fetch all the records in the database)
-getPopulation(Country, `k' or '1=1`, `5' or '1=1`);
+try {
+  connection.connect();
+  const table = "Country",
+    // name = "netherlands' OR 1=1#",
+    name = "netherlands",
+    code = `1' OR 1=1#`;
+  getPopulation(table, name, code, (err, result) => {
+    if (err) throw err;
+    console.table(result);
+  });
 
-// 2- Rewrite the function so that it is no longer vulnerable to SQL injection
-function getPopulation(Country, name, code, cb) {
-    // assuming that connection to the database is established and stored as conn
-    conn.query(
-      `SELECT Population FROM ${Country} WHERE Name =` + conn.escape(name) + "and code =" + conn.escape(code)
-      function(err, result) {
-        if (err) cb(err);
-        if (result.length == 0) cb(new Error("Not found"));
-        cb(null, result[0].name);
-      }
-    );
+  robustGetPopulation(table, name, code, (err, result) => {
+    if (err) throw err;
+    console.log("++++++++++++++++++++++++++++++++++++++++++++++++++");
+    if (result.message) console.log(result.message);
+    else console.table(result);
+    connection.end();
+  });
+} catch (error) {
+  console.error(error.message);
+  connection.end();
+}
+//In this function we can use placeholder or mysql.escape function
+function robustGetPopulation(table, name, code, cb) {
+  connection.query(
+    `SELECT Population FROM ?? WHERE Name = ? and code=?`,
+    [table, name, code],
+    function (err, result) {
+      if (err) cb(err);
+      cb(null, result);
+    }
+  );
+}
+function getPopulation(table, name, code, cb) {
+  connection.query(
+    `SELECT Population FROM ${table} WHERE Name = '${name}' and code ='${code}'`,
+    function (err, result) {
+      if (err) cb(err);
+      cb(null, result);
+    }
+  );
 }

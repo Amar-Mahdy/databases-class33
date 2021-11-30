@@ -6,10 +6,10 @@ const createTables = async () => {
     connection.connect();
     RESTART_DATABASE();
   try {
-    await Promise.all[
-      (execQuery(ACCOUNT, console.log("account table ready")),
-      execQuery(ACCOUNT_CHANGES, console.log("account_changes table ready")))
-    ];
+    
+    await execQuery(ACCOUNT, console.log("account table ready")),
+    await execQuery(ACCOUNT_CHANGES, console.log("account_changes table ready"))
+    
   } catch (error) {
     console.log(error);
   }
